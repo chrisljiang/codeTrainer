@@ -76,7 +76,7 @@ static unsigned popcnt(unsigned num) {
     return cnt;
 }
 
-std::string print_semaphore(unsigned encoded) {
+std::string semaphore_print(unsigned encoded) {
     if (popcnt(encoded) != 2) {
         return "";
     }
@@ -142,4 +142,34 @@ std::string print_semaphore(unsigned encoded) {
     }
 
     return str;
+}
+
+unsigned semaphore_to_symbol(std::string str) {
+    unsigned ret = 0;
+
+    for (unsigned i = 0; i < str.length(); ++i) {
+        char cur = str.at(i);
+
+        if (cur == '1') {
+            ret |= (1 << 0);
+        } else if (cur == '2') {
+            ret |= (1 << 1);
+        } else if (cur == '3') {
+            ret |= (1 << 2);
+        } else if (cur == '4') {
+            ret |= (1 << 3);
+        } else if (cur == '5') {
+            ret |= (1 << 4);
+        } else if (cur == '6') {
+            ret |= (1 << 5);
+        } else if (cur == '7') {
+            ret |= (1 << 6);
+        } else if (cur == '8') {
+            ret |= (1 << 7);
+        } else {
+            std::cout << "ERROR - bad braille input" << std::endl;
+        }
+    }
+
+    return ret;
 }

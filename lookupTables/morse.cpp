@@ -63,3 +63,5 @@ const std::unordered_map<char, std::string> morse_encode  = {
     {'Y', dash + dot + dash + dash},
     {'Z', dash + dash + dot + dot}
 };
+
+unsigned morse_to_symbol(std::string str);

@@ -11,7 +11,7 @@ void printEncodeChar(code codeType, mode modeType, char cur) {
         } else if (codeType == nato) {
             std::cout << nato_encode.at(cur) << std::endl;
         } else if (codeType == semaphore) {
-            std::cout << semaphore_encode.at(cur) << std::endl;
+            std::cout << semaphore_print(semaphore_encode.at(cur)) << std::endl;
         } else {
             std::cout << "ERROR - bad codeType" << std::endl;
         }
