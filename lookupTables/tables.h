@@ -30,7 +30,7 @@ unsigned braille_to_symbol(std::string str);
 extern const std::unordered_map<std::string, char> morse_decode;
 extern const std::unordered_map<char, std::string> morse_encode;
 
-unsigned morse_to_symbol(std::string str);
+std::string morse_to_symbol(std::string str);
 
 // NATO
 extern const std::unordered_map<std::string, char> nato_decode;

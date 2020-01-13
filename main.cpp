@@ -116,7 +116,31 @@ int main(int argc, char *argv[]) {
                 }
             }
         } else if (codeType == morse) {
-            std::cout << "ERROR - not implemented" << std::endl;
+            while (true) {
+                char cur = rand() % 26 + 'A';
+
+                std::cout << cur << std::endl;
+
+                std::string str;
+                std::cin >> str;
+
+                std::string in = morse_to_symbol(str);
+                char inCur = morse_decode.at(in);
+
+                if (cur == inCur) {
+                    std::cout << "Correct!" << std::endl;
+                    ++streak;
+                    if (streak % 10 == 0) {
+                        std::cout << "You are on a " << streak << " character streak!" << std::endl;
+                    }
+                } else {
+                    std::cout << "Incorrect." << std::endl
+                              << "You entered " << morse_encode.at(inCur) << " which is a "
+                              << inCur << "." << std::endl
+                              << "A " << cur << " is " << morse_encode.at(cur) << "." << std::endl;
+                    streak = 0;
+                }
+            }
         } else if (codeType == nato) {
             std::cout << "ERROR - not implemented" << std::endl;
         } else if (codeType == semaphore) {
