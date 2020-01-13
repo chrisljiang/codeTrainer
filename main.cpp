@@ -61,6 +61,7 @@ int main(int argc, char *argv[]) {
 
     srand(time(nullptr));
 
+    unsigned streak = 0;
     while (true) {
         char cur = rand() % 26 + 'A';
 
@@ -71,8 +72,13 @@ int main(int argc, char *argv[]) {
 
         if (in == cur || in - 0x20 == cur) {
             std::cout << "Correct!" << std::endl;
+            ++streak;
+            if (streak % 10 == 0) {
+                std::cout << "You are on a " << streak << " character streak!" << std::endl;
+            }
         } else {
-            std::cout << "Incorrect." << std::endl;
+            std::cout << "Incorrect. That was a " << cur << "." << std::endl;
+            streak = 0;
         }
     }
 
