@@ -14,7 +14,7 @@ int main(int argc, char *argv[]) {
 
     // Default types of operation
     code codeType = braille;
-    mode modeType = encode;
+    mode modeType = decode;
 
     // Test will call encode then decode on all characters of all codetypes
     // to ensure that encode and decode go match the same char to same encoded
@@ -58,6 +58,12 @@ int main(int argc, char *argv[]) {
 
     parseArgs(argc, argv, codeType, modeType);
     printArgs(codeType, modeType);
+
+    if (modeType == encode) {
+        modeType = decode;
+    } else if (modeType == decode) {
+        modeType = encode;
+    }
 
     srand(time(nullptr));
 
