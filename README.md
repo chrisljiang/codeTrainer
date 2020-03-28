@@ -18,12 +18,32 @@ make
 There are currently a few flags that are available.
 
 ```
--test
--dictionary
--semaphore
+Usage:
 
--code [braille, morse, nato, semaphore]
--mode [encode, decode]
+  codeTrainer [options]
+
+Options:
+
+  -h, --help              show this help message
+
+  --test                  test library to ensure validity
+  --dictionary            print dictionary of all codes except semaphore
+  --semaphore             print dictionary for semaphore
+
+  --code [codes]          select code to practice
+  --mode [modes]          select mode to practice
+
+Codes:
+
+  braille
+  morse
+  nato
+  semaphore
+
+Modes:
+
+  encode
+  decode
 ```
 
 The `-test` flag will try encoding and decoding all the letters to ensure that the encoded versions of each letter match
