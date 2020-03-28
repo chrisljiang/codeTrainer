@@ -5,8 +5,9 @@
 #include <ctime>
 #include <unistd.h>
 
-void parseArgs(int argc, char *argv[], code &codeType, mode &modeType);
+void parseArgs(int argc, char *argv[], code &codeType, mode &modeType, bool &help);
 void printArgs(code codeType, mode modeType);
+void printHelp();
 
 int main(int argc, char *argv[]) {
     // Bold the output based on ANSI escape characters
@@ -16,15 +17,18 @@ int main(int argc, char *argv[]) {
     code codeType = braille;
     mode modeType = decode;
 
+    // Boolean to print help message
+    bool help = false;
+
     // Test will call encode then decode on all characters of all codetypes
-    // to ensure that encode and decode go match the same char to same encoded
+    // to ensure that encode and decode do match the same char to same encoded
     // character
     //
     // Dictionary will output the alphabet in all output formats (except
     // semaphore as it currently needs two lines)
     //
     // Semaphore will output the alphabet along with the semaphore counterparts
-    if (argc == 2 && std::string(argv[1]) == "-test") {
+    if (argc == 2 && std::string(argv[1]) == "--test") {
         char cur = 'A';
         while (cur - 'A' < 26) {
             std::cout << cur << " - "
@@ -36,7 +40,7 @@ int main(int argc, char *argv[]) {
             ++cur;
         }
         return 0;
-    } else if (argc == 2 && std::string(argv[1]) == "-dictionary") {
+    } else if (argc == 2 && std::string(argv[1]) == "--dictionary") {
         char cur = 'A';
         while (cur - 'A' < 26) {
             std::cout << cur << " - "
@@ -46,7 +50,7 @@ int main(int argc, char *argv[]) {
             ++cur;
         }
         return 0;
-    } else if (argc == 2 && std::string(argv[1]) == "-semaphore") {
+    } else if (argc == 2 && std::string(argv[1]) == "--semaphore") {
         char cur = 'A';
         while (cur - 'A' < 26) {
             std::cout << cur << ":" << std::endl
@@ -56,7 +60,13 @@ int main(int argc, char *argv[]) {
         return 0;
     }
 
-    parseArgs(argc, argv, codeType, modeType);
+    parseArgs(argc, argv, codeType, modeType, help);
+
+    if (help == true) {
+        printHelp();
+        return 0;
+    }
+
     printArgs(codeType, modeType);
 
     if (modeType == encode) {
@@ -91,13 +101,15 @@ int main(int argc, char *argv[]) {
     return 0;
 }
 
-void parseArgs(int argc, char *argv[], code &codeType, mode &modeType) {
+void parseArgs(int argc, char *argv[], code &codeType, mode &modeType, bool &help) {
     unsigned curArg = 0;
 
     while (curArg < argc - 1) {
         ++curArg;
 
-        if (std::string(argv[curArg]) == "-code") {
+        if (std::string(argv[curArg]) == "-h" || std::string(argv[curArg]) == "--help") {
+            help = true;
+        } else if (std::string(argv[curArg]) == "--code") {
             if (curArg < argc) {
                 ++curArg;
                 if (std::string(argv[curArg]) == "braille") {
@@ -110,13 +122,15 @@ void parseArgs(int argc, char *argv[], code &codeType, mode &modeType) {
                     codeType = semaphore;
                 } else {
                     std::cout << "ERROR - bad code argument" << std::endl;
+                    help = true;
                     return;
                 }
             } else {
-                std::cout << "ERROR - fdsa bad code argument number" << std::endl;
+                std::cout << "ERROR - bad code argument number" << std::endl;
+                help = true;
                 return;
             }
-        } else if (std::string(argv[curArg]) == "-mode") {
+        } else if (std::string(argv[curArg]) == "--mode") {
             if (curArg < argc) {
                 ++curArg;
                 if (std::string(argv[curArg]) == "encode") {
@@ -125,14 +139,17 @@ void parseArgs(int argc, char *argv[], code &codeType, mode &modeType) {
                     modeType = decode;
                 } else {
                     std::cout << "ERROR - bad mode argument" << std::endl;
+                    help = true;
                     return;
                 }
             } else {
                 std::cout << "ERROR - bad mode argument number" << std::endl;
+                help = true;
                 return;
             }
         } else {
             std::cout << "ERROR - bad option" << std::endl;
+            help = true;
             return;
         }
     }
@@ -162,6 +179,37 @@ void printArgs(code codeType, mode modeType) {
     } else {
         std::cout << "ERROR - bad args";
     }
+
+    std::cout << std::endl;
+}
+
+void printHelp() {
+    std::cout << "Usage: \n"
+              << "\n"
+              << "  codeTrainer [options]\n"
+              << "\n"
+              << "Options: \n"
+              << "\n"
+              << "  -h, --help              show this help message\n"
+              << "\n"
+              << "  --test                  test library to ensure validity\n"
+              << "  --dictionary            print dictionary of all codes except semaphore\n"
+              << "  --semaphore             print dictionary for semaphore\n"
+              << "\n"
+              << "  --code [codes]          select code to practice\n"
+              << "  --mode [modes]          select mode to practice\n"
+              << "\n"
+              << "Codes: \n"
+              << "\n"
+              << "  braille\n"
+              << "  morse\n"
+              << "  nato\n"
+              << "  semaphore\n"
+              << "\n"
+              << "Modes: \n"
+              << "\n"
+              << "  encode\n"
+              << "  decode\n";
 
     std::cout << std::endl;
 }
