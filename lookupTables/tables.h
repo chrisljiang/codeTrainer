@@ -36,6 +36,8 @@ std::string morse_to_symbol(std::string str);
 extern const std::unordered_map<std::string, char> nato_decode;
 extern const std::unordered_map<char, std::string> nato_encode;
 
+std::string nato_to_symbol(std::string str);
+
 // Semaphore
 extern const std::unordered_map<unsigned, char> semaphore_decode;
 extern const std::unordered_map<char, unsigned> semaphore_encode;
