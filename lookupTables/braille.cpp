@@ -1,4 +1,5 @@
 #include "tables.h"
+#include <iostream>
 
 const std::unordered_map<unsigned, char> braille_decode = {
     {0b000001, 'A'},
@@ -115,3 +116,29 @@ const std::unordered_map<char, std::string> braille_encode_char  = {
     {'Y', "\u283D"},
     {'Z', "\u2835"}
 };
+
+unsigned braille_to_symbol(std::string str) {
+    unsigned ret = 0;
+
+    for (unsigned i = 0; i < str.length(); ++i) {
+        char cur = str.at(i);
+
+        if (cur == 'f' || cur == 'F') {
+            ret |= (1 << 0);
+        } else if (cur == 'd' || cur == 'D') {
+            ret |= (1 << 1);
+        } else if (cur == 's' || cur == 'S') {
+            ret |= (1 << 2);
+        } else if (cur == 'j' || cur == 'J') {
+            ret |= (1 << 3);
+        } else if (cur == 'k' || cur == 'K') {
+            ret |= (1 << 4);
+        } else if (cur == 'l' || cur == 'L') {
+            ret |= (1 << 5);
+        } else {
+            std::cout << "ERROR - bad braille input" << std::endl;
+        }
+    }
+
+    return ret;
+}

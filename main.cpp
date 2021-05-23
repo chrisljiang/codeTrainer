@@ -54,7 +54,7 @@ int main(int argc, char *argv[]) {
         char cur = 'A';
         while (cur - 'A' < 26) {
             std::cout << cur << ":" << std::endl
-                      << print_semaphore(semaphore_encode.at(cur)) << std::endl;
+                      << semaphore_print(semaphore_encode.at(cur)) << std::endl;
             ++cur;
         }
         return 0;
@@ -78,23 +78,134 @@ int main(int argc, char *argv[]) {
     srand(time(nullptr));
 
     unsigned streak = 0;
-    while (true) {
-        char cur = rand() % 26 + 'A';
+    if (modeType == encode) {
+        while (true) {
+            char cur = rand() % 26 + 'A';
 
-        printEncodeChar(codeType, modeType, cur);
+            printEncodeChar(codeType, modeType, cur);
 
-        char in;
-        std::cin >> in;
+            char in;
+            std::cin >> in;
 
-        if (in == cur || in - 0x20 == cur) {
-            std::cout << "Correct!" << std::endl;
-            ++streak;
-            if (streak % 10 == 0) {
-                std::cout << "You are on a " << streak << " character streak!" << std::endl;
+            if (in == cur || in - 0x20 == cur) {
+                std::cout << "Correct!" << std::endl;
+                ++streak;
+                if (streak % 10 == 0) {
+                    std::cout << "You are on a " << streak << " character streak!" << std::endl;
+                }
+            } else {
+                std::cout << "Incorrect. That was a " << cur << "." << std::endl;
+                streak = 0;
+            }
+        }
+    } else if (modeType == decode) {
+        if (codeType == braille) {
+            while (true) {
+                char cur = rand() % 26 + 'A';
+
+                std::cout << cur << std::endl;
+
+                std::string str;
+                std::cin >> str;
+
+                unsigned in = braille_to_symbol(str);
+                char inCur = braille_decode.at(in);
+
+                if (cur == inCur) {
+                    std::cout << "Correct!" << std::endl;
+                    ++streak;
+                    if (streak % 10 == 0) {
+                        std::cout << "You are on a " << streak << " character streak!" << std::endl;
+                    }
+                } else {
+                    std::cout << "Incorrect." << std::endl
+                              << "You entered " << braille_encode_char.at(inCur) << " which is a "
+                              << inCur << "." << std::endl
+                              << "A " << cur << " is " << braille_encode_char.at(cur) << "." << std::endl;
+                    streak = 0;
+                }
+            }
+        } else if (codeType == morse) {
+            while (true) {
+                char cur = rand() % 26 + 'A';
+
+                std::cout << cur << std::endl;
+
+                std::string str;
+                std::cin >> str;
+
+                std::string in = morse_to_symbol(str);
+                char inCur = morse_decode.at(in);
+
+                if (cur == inCur) {
+                    std::cout << "Correct!" << std::endl;
+                    ++streak;
+                    if (streak % 10 == 0) {
+                        std::cout << "You are on a " << streak << " character streak!" << std::endl;
+                    }
+                } else {
+                    std::cout << "Incorrect." << std::endl
+                              << "You entered " << morse_encode.at(inCur) << " which is a "
+                              << inCur << "." << std::endl
+                              << "A " << cur << " is " << morse_encode.at(cur) << "." << std::endl;
+                    streak = 0;
+                }
+            }
+        } else if (codeType == nato) {
+            while (true) {
+                char cur = rand() % 26 + 'A';
+
+                std::cout << cur << std::endl;
+
+                std::string str;
+                std::cin >> str;
+
+                std::string in = nato_to_symbol(str);
+                char inCur = nato_decode.at(in);
+
+                if (cur == inCur) {
+                    std::cout << "Correct" << std::endl;
+                    ++streak;
+                    if (streak % 10 == 0) {
+                        std::cout << "You are on a " << streak << " character streak!" << std::endl;
+                    }
+                } else {
+                    std::cout << "Incorrect." << std::endl
+                              << "You entered " << nato_encode.at(inCur) << " which is a "
+                              << inCur << "." << std::endl
+                              << "A " << cur << " is " << nato_encode.at(cur) << "." << std::endl;
+                }
+            }
+        } else if (codeType == semaphore) {
+            while (true) {
+                char cur = rand() % 26 + 'A';
+
+                std::cout << cur << std::endl;
+
+                std::string str;
+                std::cin >> str;
+
+                unsigned in = semaphore_to_symbol(str);
+                char inCur = semaphore_decode.at(in);
+
+                if (cur == inCur) {
+                    std::cout << "Correct!" << std::endl;
+                    ++streak;
+                    if (streak % 10 == 0) {
+                        std::cout << "You are on a " << streak << " character streak!" << std::endl;
+                    }
+                } else {
+                    std::cout << "Incorrect." << std::endl
+                              << "You entered" << std::endl
+                              << semaphore_print(semaphore_encode.at(inCur)) << std::endl
+                              << "which is a " << inCur << "." << std::endl
+                              << "A " << cur << " is " << std::endl
+                              << semaphore_print(semaphore_encode.at(cur)) << "." << std::endl;
+                    streak = 0;
+                }
             }
         } else {
-            std::cout << "Incorrect. That was a " << cur << "." << std::endl;
-            streak = 0;
+            std::cout << "ERROR - bad codeType" << std::endl;
         }
     }
 

@@ -1,4 +1,5 @@
 #include "tables.h"
+#include <iostream>
 
 //#define DOT  #\u2022
 //#define DASH #\u2043
@@ -63,3 +64,21 @@ const std::unordered_map<char, std::string> morse_encode  = {
     {'Y', dash + dot + dash + dash},
     {'Z', dash + dash + dot + dot}
 };
+
+std::string morse_to_symbol(std::string str) {
+    std::string ret;
+
+    for (unsigned i = 0; i < str.length(); ++i) {
+        char cur = str.at(i);
+
+        if (cur == '.' || cur == 'f' || cur == 'F') {
+            ret += dot;
+        } else if (cur == '-' || cur == 'j' || cur == 'J') {
+            ret += dash;
+        } else {
+            std::cout << "ERROR - bad braille input" << std::endl;
+        }
+    }
+
+    return ret;
+}
