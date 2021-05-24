@@ -1,5 +1,6 @@
 #include "tables.h"
-#include <iostream>
+
+#include <stdexcept>
 
 const std::unordered_map<std::string, char> nato_decode = {
     {"ALFA",     'A'},
@@ -70,7 +71,7 @@ std::string nato_to_symbol(std::string str) {
         } else if (cur >= 'a' && cur <= 'z') {
             ret += cur + 'A' - 'a';
         } else {
-            std::cout << "ERROR - bad nato input" << std::endl;
+            throw std::runtime_error("Bad nato input");
         }
     }
 

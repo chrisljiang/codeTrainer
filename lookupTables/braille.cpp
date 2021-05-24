@@ -1,5 +1,6 @@
 #include "tables.h"
-#include <iostream>
+
+#include <stdexcept>
 
 const std::unordered_map<unsigned, char> braille_decode = {
     {0b000001, 'A'},
@@ -136,7 +137,7 @@ unsigned braille_to_symbol(std::string str) {
         } else if (cur == 'l' || cur == 'L') {
             ret |= (1 << 5);
         } else {
-            std::cout << "ERROR - bad braille input" << std::endl;
+            throw std::runtime_error("Bad braille input");
         }
     }
 
