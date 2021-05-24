@@ -167,7 +167,7 @@ unsigned semaphore_to_symbol(std::string str) {
         } else if (cur == '8') {
             ret |= (1 << 7);
         } else {
-            std::cout << "ERROR - bad braille input" << std::endl;
+            std::cout << "ERROR - bad semaphore input" << std::endl;
         }
     }
 

@@ -76,7 +76,7 @@ std::string morse_to_symbol(std::string str) {
         } else if (cur == '-' || cur == 'j' || cur == 'J') {
             ret += dash;
         } else {
-            std::cout << "ERROR - bad braille input" << std::endl;
+            std::cout << "ERROR - bad morse input" << std::endl;
         }
     }
 
