@@ -1,5 +1,6 @@
 #include "tables.h"
-#include <iostream>
+
+#include <stdexcept>
 
 //#define DOT  #\u2022
 //#define DASH #\u2043
@@ -76,7 +77,7 @@ std::string morse_to_symbol(std::string str) {
         } else if (cur == '-' || cur == 'j' || cur == 'J') {
             ret += dash;
         } else {
-            std::cout << "ERROR - bad morse input" << std::endl;
+            throw std::runtime_error("Bad morse input");
         }
     }
 

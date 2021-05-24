@@ -82,17 +82,34 @@ int main(int argc, char *argv[]) {
         while (true) {
             char cur = rand() % 26 + 'A';
 
-            printEncodeChar(codeType, modeType, cur);
+            printEncodeChar(codeType, cur);
 
             std::string str;
-            std::cin >> str;
+            char in = '\0';
 
-            if (str == "exit") {
-                std::cout << "Exiting" << std::endl;
-                break;
-            }
+            do {
+                std::cin >> str;
 
-            char in = str.at(0);
+                if (str == "exit") {
+                    std::cout << "Exiting" << std::endl;
+                    return 0;
+                }
+
+                try {
+                    if (str.at(0) >= 'A' && str.at(0) <= 'Z') {
+                        in = str.at(0);
+                    } else if (str.at(0) >= 'a' && str.at(0) <= 'z') {
+                        in = str.at(0) + 'A' - 'a';
+                    } else {
+                        throw std::runtime_error("Bad input");
+                    }
+                } catch (std::runtime_error& e) {
+                    std::cerr << e.what() << std::endl;
+                }
+                if (in == '\0') {
+                    std::cout << "Try again." << std::endl;
+                }
+            } while (in == '\0');
 
             if (in == cur || in - 0x20 == cur) {
                 std::cout << "Correct!" << std::endl;
@@ -111,17 +128,25 @@ int main(int argc, char *argv[]) {
         while (true) {
             char cur = rand() % 26 + 'A';
 
-            printDecodeChar(codeType, modeType, cur);
+            std::cout << cur << std::endl;
 
             std::string str;
-            std::cin >> str;
+            char in = '\0';
 
-            if (str == "exit") {
-                std::cout << "Exiting" << std::endl;
-                break;
-            }
+            do {
+                std::cin >> str;
 
-            char in = str_to_char(codeType, modeType, str);
+                if (str == "exit") {
+                    std::cout << "Exiting" << std::endl;
+                    return 0;
+                }
+
+                in = str_to_char(codeType, str);
+
+                if (in == '\0') {
+                    std::cout << "Try again." << std::endl;
+                }
+            } while (in == '\0');
 
             if (in == cur) {
                 std::cout << "Correct!" << std::endl;
@@ -132,9 +157,9 @@ int main(int argc, char *argv[]) {
             } else {
                 std::cout << "Incorrect." << std::endl
                           << "You entered:" << std::endl;
-                printEncodeChar(codeType, modeType, in);
+                printEncodeChar(codeType, in);
                 std::cout << "but:" << std::endl;
-                printEncodeChar(codeType, modeType, cur);
+                printEncodeChar(codeType, cur);
                 std::cout << "was expected." << std::endl;
             }
         }

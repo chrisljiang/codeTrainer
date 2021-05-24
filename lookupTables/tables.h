@@ -16,10 +16,9 @@ enum mode {
     decode = 1
 };
 
-void printEncodeChar(code codeType, mode modeType, char cur);
-void printDecodeChar(code codeType, mode modeType, char cur);
+void printEncodeChar(code codeType, char cur);
 
-char str_to_char(code codeType, mode modeType, std::string str);
+char str_to_char(code codeType, std::string str);
 
 // Braille
 extern const std::unordered_map<unsigned, char> braille_decode;

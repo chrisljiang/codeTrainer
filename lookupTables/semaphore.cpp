@@ -1,5 +1,6 @@
 #include "tables.h"
-#include <iostream>
+
+#include <stdexcept>
 
 const std::unordered_map<unsigned, char> semaphore_decode = {
     {0b00000011, 'A'},
@@ -167,7 +168,7 @@ unsigned semaphore_to_symbol(std::string str) {
         } else if (cur == '8') {
             ret |= (1 << 7);
         } else {
-            std::cout << "ERROR - bad semaphore input" << std::endl;
+            throw std::runtime_error("Bad semaphore input");
         }
     }
 
