@@ -1,5 +1,6 @@
 #include "tables.h"
 
+#include <iostream>
 #include <stdexcept>
 
 const std::unordered_map<unsigned, char> semaphore_decode = {
@@ -60,11 +61,15 @@ const std::unordered_map<char, unsigned> semaphore_encode  = {
     {'Z', 0b11000000}
 };
 
-static const std::string updiag = "\u27CB";
-static const std::string downdiag = "\u27CD";
+static const std::string updiag_u = "\u27CB";
+static const std::string downdiag_u = "\u27CD";
+static const std::string vert_u = "\u007C";
+static const std::string hor_u = "\u2014";
 
-static const std::string vert = "\u007C";
-static const std::string hor = "\u2014";
+static const std::string updiag_a = "/";
+static const std::string downdiag_a = "\\";
+static const std::string vert_a = "|";
+static const std::string hor_a = "-";
 
 static unsigned popcnt(unsigned num) {
     unsigned cnt = 0;
@@ -77,9 +82,25 @@ static unsigned popcnt(unsigned num) {
     return cnt;
 }
 
-std::string semaphore_print(unsigned encoded) {
+std::string semaphore_print(unsigned encoded, style styleType) {
     if (popcnt(encoded) != 2) {
         return "";
+    }
+
+    std::string updiag, downdiag, vert, hor;
+
+    if (styleType == unicode) {
+        updiag = updiag_u;
+        downdiag = downdiag_u;
+        vert = vert_u;
+        hor = hor_u;
+    } else if (styleType == ascii) {
+        updiag = updiag_a;
+        downdiag = downdiag_a;
+        vert = vert_a;
+        hor = hor_a;
+    } else {
+        std::cout << "ERROR - bad styleType" << std::endl;
     }
 
     // 4 5 6

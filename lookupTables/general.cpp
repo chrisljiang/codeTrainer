@@ -3,17 +3,33 @@
 #include <iostream>
 #include <stdexcept>
 
-void printEncodeChar(code codeType, char cur) {
-    if (codeType == braille) {
-        std::cout << braille_encode_char.at(cur) << std::endl;
-    } else if (codeType == morse) {
-        std::cout << morse_encode.at(cur) << std::endl;
-    } else if (codeType == nato) {
-        std::cout << nato_encode.at(cur) << std::endl;
-    } else if (codeType == semaphore) {
-        std::cout << semaphore_print(semaphore_encode.at(cur)) << std::endl;
+void printEncodeChar(code codeType, style styleType, char cur) {
+    if (styleType == unicode) {
+        if (codeType == braille) {
+            std::cout << braille_encode_char.at(cur) << std::endl;
+        } else if (codeType == morse) {
+            std::cout << morse_encode.at(cur) << std::endl;
+        } else if (codeType == nato) {
+            std::cout << nato_encode.at(cur) << std::endl;
+        } else if (codeType == semaphore) {
+            std::cout << semaphore_print(semaphore_encode.at(cur), styleType) << std::endl;
+        } else {
+            std::cout << "ERROR - bad codeType" << std::endl;
+        }
+    } else if (styleType == ascii) {
+        if (codeType == braille) {
+            std::cout << braille_print(braille_encode.at(cur)) << std::endl;
+        } else if (codeType == morse) {
+            std::cout << morse_encode_ascii.at(cur) << std::endl;
+        } else if (codeType == nato) {
+            std::cout << nato_encode.at(cur) << std::endl;
+        } else if (codeType == semaphore) {
+            std::cout << semaphore_print(semaphore_encode.at(cur), styleType) << std::endl;
+        } else {
+            std::cout << "ERROR - bad codeType" << std::endl;
+        }
     } else {
-        std::cout << "ERROR - bad codeType" << std::endl;
+        std::cout << "ERROR - bad styleType" << std::endl;
     }
 }
 

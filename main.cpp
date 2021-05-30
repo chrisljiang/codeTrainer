@@ -5,8 +5,8 @@
 #include <ctime>
 #include <unistd.h>
 
-void parseArgs(int argc, char *argv[], code &codeType, mode &modeType, bool &help);
-void printArgs(code codeType, mode modeType);
+void parseArgs(int argc, char *argv[], code &codeType, mode &modeType, style &styleType, bool &help);
+void printArgs(code codeType, mode modeType, style styleType);
 void printHelp();
 
 int main(int argc, char *argv[]) {
@@ -16,6 +16,7 @@ int main(int argc, char *argv[]) {
     // Default types of operation
     code codeType = braille;
     mode modeType = decode;
+    style styleType = unicode;
 
     // Boolean to print help message
     bool help = false;
@@ -35,6 +36,7 @@ int main(int argc, char *argv[]) {
                       << braille_decode_char.at(braille_encode_char.at(cur)) << " - "
                       << braille_decode.at(braille_encode.at(cur)) << " - "
                       << morse_decode.at(morse_encode.at(cur)) << " - "
+                      << morse_decode_ascii.at(morse_encode_ascii.at(cur)) << " - "
                       << nato_decode.at(nato_encode.at(cur)) << " - "
                       << semaphore_decode.at(semaphore_encode.at(cur)) << std::endl;
             ++cur;
@@ -54,20 +56,20 @@ int main(int argc, char *argv[]) {
         char cur = 'A';
         while (cur - 'A' < 26) {
             std::cout << cur << ":" << std::endl
-                      << semaphore_print(semaphore_encode.at(cur)) << std::endl;
+                      << semaphore_print(semaphore_encode.at(cur), styleType) << std::endl;
             ++cur;
         }
         return 0;
     }
 
-    parseArgs(argc, argv, codeType, modeType, help);
+    parseArgs(argc, argv, codeType, modeType, styleType, help);
 
     if (help == true) {
         printHelp();
         return 0;
     }
 
-    printArgs(codeType, modeType);
+    printArgs(codeType, modeType, styleType);
 
     if (modeType == encode) {
         modeType = decode;
@@ -82,7 +84,7 @@ int main(int argc, char *argv[]) {
         while (true) {
             char cur = rand() % 26 + 'A';
 
-            printEncodeChar(codeType, cur);
+            printEncodeChar(codeType, styleType, cur);
 
             std::string str;
             char in = '\0';
@@ -157,10 +159,11 @@ int main(int argc, char *argv[]) {
             } else {
                 std::cout << "Incorrect." << std::endl
                           << "You entered:" << std::endl;
-                printEncodeChar(codeType, in);
+                printEncodeChar(codeType, styleType, in);
                 std::cout << "but:" << std::endl;
-                printEncodeChar(codeType, cur);
+                printEncodeChar(codeType, styleType, cur);
                 std::cout << "was expected." << std::endl;
+                streak = 0;
             }
         }
     } else {
@@ -170,7 +173,7 @@ int main(int argc, char *argv[]) {
     return 0;
 }
 
-void parseArgs(int argc, char *argv[], code &codeType, mode &modeType, bool &help) {
+void parseArgs(int argc, char *argv[], code &codeType, mode &modeType, style &styleType, bool &help) {
     unsigned curArg = 0;
 
     while (curArg < argc - 1) {
@@ -216,6 +219,23 @@ void parseArgs(int argc, char *argv[], code &codeType, mode &modeType, bool &hel
                 help = true;
                 return;
             }
+        } else if (std::string(argv[curArg]) == "--style") {
+            if (curArg < argc) {
+                ++curArg;
+                if (std::string(argv[curArg]) == "unicode") {
+                    styleType = unicode;
+                } else if (std::string(argv[curArg]) == "ascii") {
+                    styleType = ascii;
+                } else {
+                    std::cout << "ERROR - bad style argument" << std::endl;
+                    help = true;
+                    return;
+                }
+            } else {
+                std::cout << "ERROR - bad style argument number" << std::endl;
+                help = true;
+                return;
+            }
         } else {
             std::cout << "ERROR - bad option" << std::endl;
             help = true;
@@ -224,7 +244,7 @@ void parseArgs(int argc, char *argv[], code &codeType, mode &modeType, bool &hel
     }
 }
 
-void printArgs(code codeType, mode modeType) {
+void printArgs(code codeType, mode modeType, style styleType) {
     std::cout << "Selected parameters: ";
 
     if (modeType == encode) {
@@ -249,6 +269,16 @@ void printArgs(code codeType, mode modeType) {
         std::cout << "ERROR - bad args";
     }
 
+    std::cout << " ";
+
+    if (styleType == unicode) {
+        std::cout << "unicode";
+    } else if (styleType == ascii) {
+        std::cout << "ascii";
+    } else {
+        std::cout << "ERROR - bad args";
+    }
+
     std::cout << std::endl;
 }
 
@@ -267,6 +297,7 @@ void printHelp() {
               << "\n"
               << "  --code [codes]          select code to practice\n"
               << "  --mode [modes]          select mode to practice\n"
+              << "  --style [styles]        select style to print characters\n"
               << "\n"
               << "Codes: \n"
               << "\n"
@@ -278,7 +309,12 @@ void printHelp() {
               << "Modes: \n"
               << "\n"
               << "  encode\n"
-              << "  decode\n";
+              << "  decode\n"
+              << "\n"
+              << "Styles: \n"
+              << "\n"
+              << "  unicode\n"
+              << "  ascii\n";
 
     std::cout << std::endl;
 }
