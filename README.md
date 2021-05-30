@@ -13,6 +13,14 @@ cmake ..
 make
 ```
 
+### Mac
+
+To ensure correct compilation, use:
+
+```
+cmake .. -D CMAKE_CXX_STANDARD=11
+```
+
 ## Usage instructions
 
 There are currently a few flags that are available.
@@ -44,6 +52,11 @@ Modes:
 
   encode
   decode
+
+Styles:
+
+  unicode
+  ascii
 ```
 
 The `--test` flag will try encoding and decoding all the letters to ensure that the encoded versions of each letter
@@ -59,5 +72,10 @@ characters.
 The `--code` flag followed by an arguement is to signal what type of code to use the trainer with on the current run. It
 needs an argument if the flag is used, otherwise it defaults to braille.
 
-The `--mode` flag is similar to the `--code` flag and needs an argument if used. Currently, only `encode` is implemented
-which weirdly refers to the computer encoding the character and you having to decipher it.
+The `--mode` flag followed by an argument is similar to the `--code` flag. It signals if the user wants to encode or
+decode. It needs an argument if the flag is used, otherwise it defaults to decode.
+
+The `--style` flag followed by an argument is to choose the characters used to print the encoded characters. For example
+braille in unicode prints the actual unicode braille characters, but many fonts do not have these characters, so the
+ascii variant prints dots across three lines instead of as a single character. It needs an argument if the flag is used,
+otherwise it defaults to unicode.

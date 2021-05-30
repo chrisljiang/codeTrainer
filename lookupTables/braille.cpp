@@ -1,6 +1,7 @@
 #include "tables.h"
 
 #include <stdexcept>
+#include <string>
 
 const std::unordered_map<unsigned, char> braille_decode = {
     {0b000001, 'A'},
@@ -117,6 +118,33 @@ const std::unordered_map<char, std::string> braille_encode_char  = {
     {'Y', "\u283D"},
     {'Z', "\u2835"}
 };
+
+static const std::string dot = ".";
+static const std::string blank = " ";
+
+std::string braille_print(unsigned encoded) {
+    // 1 4
+    // 2 5
+    // 3 6
+
+    std::string str;
+
+    for (unsigned i = 1; i <= 3; ++i) {
+        for (unsigned j = 0; j <= 3; j = j + 3) {
+            if (encoded & (1 << (i + j - 1))) {
+                str += dot;
+            } else {
+                str += blank;
+            }
+        }
+
+        if (i <= 2) {
+            str += "\n";
+        }
+    }
+
+    return str;
+}
 
 unsigned braille_to_symbol(std::string str) {
     unsigned ret = 0;

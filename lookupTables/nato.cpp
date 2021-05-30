@@ -70,6 +70,8 @@ std::string nato_to_symbol(std::string str) {
             ret += cur;
         } else if (cur >= 'a' && cur <= 'z') {
             ret += cur + 'A' - 'a';
+        } else if (cur == '-') {
+            ret += '-';
         } else {
             throw std::runtime_error("Bad nato input");
         }
