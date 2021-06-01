@@ -40,6 +40,9 @@ Options:
 
   --code [codes]          select code to practice
   --mode [modes]          select mode to practice
+  --style [styles]        select style to print characters
+
+  --char [chars]          select character set to test
 
 Codes:
 
@@ -79,3 +82,6 @@ The `--style` flag followed by an argument is to choose the characters used to p
 braille in unicode prints the actual unicode braille characters, but many fonts do not have these characters, so the
 ascii variant prints dots across three lines instead of as a single character. It needs an argument if the flag is used,
 otherwise it defaults to unicode.
+
+The `--char` flag followed by a string of characters without whitespace allows the user to select the character set to
+be tested on. Currently the characters must be given as upper case.

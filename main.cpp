@@ -3,10 +3,13 @@
 #include <iostream>
 #include <cstdlib>
 #include <ctime>
+#include <string>
 #include <unistd.h>
 
-void parseArgs(int argc, char *argv[], code &codeType, mode &modeType, style &styleType, bool &help);
-void printArgs(code codeType, mode modeType, style styleType);
+static const std::string charSetFull = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
+void parseArgs(int argc, char *argv[], code &codeType, mode &modeType, style &styleType, std::string &charSet, bool &help);
+void printArgs(code codeType, mode modeType, style styleType, std::string charSet);
 void printHelp();
 
 int main(int argc, char *argv[]) {
@@ -17,6 +20,9 @@ int main(int argc, char *argv[]) {
     code codeType = braille;
     mode modeType = decode;
     style styleType = unicode;
+
+    // String for character set
+    std::string charSet = charSetFull;
 
     // Boolean to print help message
     bool help = false;
@@ -62,14 +68,14 @@ int main(int argc, char *argv[]) {
         return 0;
     }
 
-    parseArgs(argc, argv, codeType, modeType, styleType, help);
+    parseArgs(argc, argv, codeType, modeType, styleType, charSet, help);
 
     if (help == true) {
         printHelp();
         return 0;
     }
 
-    printArgs(codeType, modeType, styleType);
+    printArgs(codeType, modeType, styleType, charSet);
 
     if (modeType == encode) {
         modeType = decode;
@@ -82,7 +88,11 @@ int main(int argc, char *argv[]) {
     unsigned streak = 0;
     if (modeType == encode) {
         while (true) {
-            char cur = rand() % 26 + 'A';
+            char cur = '\0';
+
+            do {
+                cur = rand() % 26 + 'A';
+            } while (charSet.find(cur) == std::string::npos);
 
             printEncodeChar(codeType, styleType, cur);
 
@@ -128,7 +138,11 @@ int main(int argc, char *argv[]) {
         }
     } else if (modeType == decode) {
         while (true) {
-            char cur = rand() % 26 + 'A';
+            char cur = '\0';
+
+            do {
+                cur = rand() % 26 + 'A';
+            } while (charSet.find(cur) == std::string::npos);
 
             std::cout << cur << std::endl;
 
@@ -173,7 +187,7 @@ int main(int argc, char *argv[]) {
     return 0;
 }
 
-void parseArgs(int argc, char *argv[], code &codeType, mode &modeType, style &styleType, bool &help) {
+void parseArgs(int argc, char *argv[], code &codeType, mode &modeType, style &styleType, std::string &charSet, bool &help) {
     unsigned curArg = 0;
 
     while (curArg < argc - 1) {
@@ -236,6 +250,32 @@ void parseArgs(int argc, char *argv[], code &codeType, mode &modeType, style &st
                 help = true;
                 return;
             }
+        } else if (std::string(argv[curArg]) == "--char") {
+            if (curArg < argc) {
+                ++curArg;
+                if (std::string(argv[curArg]) != "") {
+                    charSet = std::string(argv[curArg]);
+                    bool validSet = false;
+                    for (char cur : charSetFull) {
+                        if (charSet.find(cur) != std::string::npos) {
+                            validSet = true;
+                        }
+                    }
+                    if (validSet == false) {
+                        std::cout << "ERROR - bad char argument" << std::endl;
+                        help = true;
+                        return;
+                    }
+                } else {
+                    std::cout << "ERROR - bad char argument" << std::endl;
+                    help = true;
+                    return;
+                }
+            } else {
+                std::cout << "ERROR - bad char argument number" << std::endl;
+                help = true;
+                return;
+            }
         } else {
             std::cout << "ERROR - bad option" << std::endl;
             help = true;
@@ -244,7 +284,7 @@ void parseArgs(int argc, char *argv[], code &codeType, mode &modeType, style &st
     }
 }
 
-void printArgs(code codeType, mode modeType, style styleType) {
+void printArgs(code codeType, mode modeType, style styleType, std::string charSet) {
     std::cout << "Selected parameters: ";
 
     if (modeType == encode) {
@@ -279,6 +319,14 @@ void printArgs(code codeType, mode modeType, style styleType) {
         std::cout << "ERROR - bad args";
     }
 
+    std::cout << " ";
+
+    if (charSet != "") {
+        std::cout << charSet;
+    } else {
+        std::cout << "ERROR - bad args";
+    }
+
     std::cout << std::endl;
 }
 
@@ -298,6 +346,8 @@ void printHelp() {
               << "  --code [codes]          select code to practice\n"
               << "  --mode [modes]          select mode to practice\n"
               << "  --style [styles]        select style to print characters\n"
+              << "\n"
+              << "  --char [chars]          select character set to test\n"
               << "\n"
               << "Codes: \n"
               << "\n"
